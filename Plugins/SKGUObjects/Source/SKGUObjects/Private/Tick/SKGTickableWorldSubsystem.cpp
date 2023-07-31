@@ -21,7 +21,7 @@ void USKGTickableWorldSubsystem::Tick(float DeltaTime)
 		else
 		{
 			bShrinkArray = true;
-			TickableObjects.RemoveAt(i, 1, false);
+			TickableObjects.RemoveAtSwap(i, 1, false);
 		}
 	}
 
@@ -38,6 +38,5 @@ void USKGTickableWorldSubsystem::AddTickableObject(USKGTickableObject* Object)
 
 void USKGTickableWorldSubsystem::RemoveTickableObject(USKGTickableObject* Object)
 {
-	TickableObjects.Remove(Object);
-	TickableObjects.Shrink();
+	TickableObjects.RemoveSingleSwap(Object);
 }

@@ -99,11 +99,6 @@ bool USKGObject::IsTickable() const
 	return false;
 }
 
-UWorld* USKGObject::GetGameWorldObject() const
-{
-	return GetWorld();
-}
-
 void USKGObject::PostInitProperties()
 {
 	UObject::PostInitProperties();

@@ -59,8 +59,6 @@ protected:
 	virtual bool IsTickable() const override;
 	// END OF Ticking ---------------------------------------------------------------
 	
-	virtual UWorld* GetGameWorldObject() const override;
-	
 public:
 	UFUNCTION(BlueprintCallable, Category = "SKGObject")
 	AActor* GetOwner() const { return OwnerCache ? OwnerCache : FindOwner(); }
