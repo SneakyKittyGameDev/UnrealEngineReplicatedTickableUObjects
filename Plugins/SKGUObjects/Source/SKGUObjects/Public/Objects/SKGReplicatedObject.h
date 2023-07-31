@@ -15,7 +15,7 @@ class SKGUOBJECTS_API USKGReplicatedObject : public USKGObject
 	GENERATED_BODY()
 public:
 	USKGReplicatedObject();
-	~USKGReplicatedObject(); 
+	~USKGReplicatedObject();
 
 protected:
 	// Replication -------------------------------------------------------------------------------------------------------
