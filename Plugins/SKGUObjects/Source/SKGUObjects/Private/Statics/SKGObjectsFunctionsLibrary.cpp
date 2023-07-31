@@ -1,7 +1,7 @@
 // Copyright 2023, Dakota Dawe, All rights reserved
 
 
-#include "Statics/SKGInventoryFunctionsLibrary.h"
+#include "Statics/SKGObjectsFunctionsLibrary.h"
 #include "Objects/SKGReplicatedObject.h"
 
 #if DO_ENSURE
@@ -14,7 +14,7 @@
 	#define ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) IsValid(Outer)
 #endif
 
-USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> SubObjectClass)
+USKGReplicatedObject* USKGObjectsFunctionsLibrary::CreateReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> SubObjectClass)
 {
 	if (IsValid(Outer) && SubObjectClass)
 	{
@@ -23,17 +23,17 @@ USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateReplicatedSubObject(U
 	return nullptr;
 }
 
-USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateAndAddReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> Class, ELifetimeCondition NetCondition)
+USKGReplicatedObject* USKGObjectsFunctionsLibrary::CreateAndRegisterReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> Class, ELifetimeCondition NetCondition)
 {
 	USKGReplicatedObject* SubObject = CreateReplicatedSubObject(Outer, Class);
 	if (IsValid(SubObject))
 	{
-		AddReplicatedSubObject(Outer, SubObject, NetCondition);
+		RegisterReplicatedSubObject(Outer, SubObject, NetCondition);
 	}
 	return SubObject;
 }
 
-void USKGInventoryFunctionsLibrary::AddReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject, ELifetimeCondition NetCondition)
+void USKGObjectsFunctionsLibrary::RegisterReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject, ELifetimeCondition NetCondition)
 {
 	if (ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) && IsValid(SubObject))
 	{
@@ -56,7 +56,7 @@ void USKGInventoryFunctionsLibrary::AddReplicatedSubObject(UObject* Outer, USKGR
 	}
 }
 
-void USKGInventoryFunctionsLibrary::RemoveReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject)
+void USKGObjectsFunctionsLibrary::UnRegisterReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject)
 {
 	if (ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) && IsValid(SubObject))
 	{
