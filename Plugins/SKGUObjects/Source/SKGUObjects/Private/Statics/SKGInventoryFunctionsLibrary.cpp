@@ -6,12 +6,11 @@
 
 USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> SubObjectClass)
 {
-	USKGReplicatedObject* SubObject = nullptr;
 	if (IsValid(Outer) && SubObjectClass)
 	{
-		SubObject = NewObject<USKGReplicatedObject>(Outer, SubObjectClass);
+		return NewObject<USKGReplicatedObject>(Outer, SubObjectClass);
 	}
-	return SubObject;
+	return nullptr;
 }
 
 USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateAndAddReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> Class, ELifetimeCondition NetCondition)

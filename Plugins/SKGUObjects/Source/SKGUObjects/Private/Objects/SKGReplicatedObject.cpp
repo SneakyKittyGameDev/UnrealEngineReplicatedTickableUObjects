@@ -42,8 +42,7 @@ bool USKGReplicatedObject::CallRemoteFunction(UFunction* Function, void* Paramet
 
 	if (AActor* MyOwner = GetOwner())
 	{
-		FWorldContext* const Context = GEngine->GetWorldContextFromWorld(GetWorld());
-		if (Context != nullptr)
+		if (FWorldContext* const Context = GEngine->GetWorldContextFromWorld(GetWorld()))
 		{
 			for (FNamedNetDriver& Driver : Context->ActiveNetDrivers)
 			{

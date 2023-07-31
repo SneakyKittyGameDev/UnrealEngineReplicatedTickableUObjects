@@ -9,9 +9,9 @@
 
 void USKGTickableObject::AddAsTickableObject()
 {
-	if (GetGameWorldObject())
+	if (const UWorld* World = GetWorld())
 	{
-		if (USKGTickableWorldSubsystem* Subsystem = GetGameWorldObject()->GetSubsystem<USKGTickableWorldSubsystem>())
+		if (USKGTickableWorldSubsystem* Subsystem = World->GetSubsystem<USKGTickableWorldSubsystem>())
 		{
 			Subsystem->AddTickableObject(this);
 		}
@@ -20,9 +20,9 @@ void USKGTickableObject::AddAsTickableObject()
 
 void USKGTickableObject::RemoveTickableObject()
 {
-	if (GetGameWorldObject())
+	if (const UWorld* World = GetWorld())
 	{
-		if (USKGTickableWorldSubsystem* Subsystem = GetGameWorldObject()->GetSubsystem<USKGTickableWorldSubsystem>())
+		if (USKGTickableWorldSubsystem* Subsystem = World->GetSubsystem<USKGTickableWorldSubsystem>())
 		{
 			Subsystem->RemoveTickableObject(this);
 		}

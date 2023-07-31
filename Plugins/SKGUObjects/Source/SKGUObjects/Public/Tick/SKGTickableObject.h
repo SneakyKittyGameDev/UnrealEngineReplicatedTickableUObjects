@@ -16,9 +16,9 @@ class SKGUOBJECTS_API USKGTickableObject : public UObject
 public:
 	USKGTickableObject() {}
 	virtual ~USKGTickableObject() {}
-	
+	virtual UWorld* GetWorld() const override { return nullptr; }
+
 	virtual void Tick(float DeltaTime) {}
-	virtual UWorld* GetGameWorldObject() const { return nullptr; }
 	virtual bool IsTickable() const { return true; }
 
 protected:

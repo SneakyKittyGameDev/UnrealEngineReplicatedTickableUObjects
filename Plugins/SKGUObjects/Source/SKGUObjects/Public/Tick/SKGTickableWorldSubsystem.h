@@ -22,6 +22,6 @@ public:
 protected:
 	void AddTickableObject(USKGTickableObject* Object);
 	void RemoveTickableObject(USKGTickableObject* Object);
-	
-	TArray<TObjectPtr<USKGTickableObject>> TickableObjects;
+
+	TArray<TWeakObjectPtr<USKGTickableObject>> TickableObjects;
 };
