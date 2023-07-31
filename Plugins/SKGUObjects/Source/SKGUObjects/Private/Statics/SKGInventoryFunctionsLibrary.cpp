@@ -4,6 +4,16 @@
 #include "Statics/SKGInventoryFunctionsLibrary.h"
 #include "Objects/SKGReplicatedObject.h"
 
+#if DO_ENSURE
+	#define ENSURE_OUTER_USING_REGISTERED_SUBOBJECT_LIST(InExpression, Outer) \
+		ensureAlwaysMsgf(InExpression, TEXT("Outer: %s is not using bReplicateUsingRegisteredSubObjectList. MAKE SURE bReplicateUsingRegisteredSubObjectList UNDER Replication IS ENABLED FOR THIS OUTER"), *Outer->GetName())
+	#define ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) \
+		ensureAlwaysMsgf(IsValid(Outer) && (Outer->IsA(AActor::StaticClass()) || Outer->IsA(UActorComponent::StaticClass())), TEXT("Outer is INVALID or NOT a Actor/ActorComponent"))
+#else
+	#define ENSURE_OUTER_USING_REGISTERED_SUBOBJECT_LIST(InExpression, Outer) InExpression
+	#define ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) IsValid(Outer)
+#endif
+
 USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> SubObjectClass)
 {
 	if (IsValid(Outer) && SubObjectClass)
@@ -25,25 +35,22 @@ USKGReplicatedObject* USKGInventoryFunctionsLibrary::CreateAndAddReplicatedSubOb
 
 void USKGInventoryFunctionsLibrary::AddReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject, ELifetimeCondition NetCondition)
 {
-	if (IsValid(Outer) && IsValid(SubObject))
+	if (ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) && IsValid(SubObject))
 	{
-		if (ensureAlwaysMsgf(IsActorOrActorComponent(Outer), TEXT("Outer is not a Actor or ActorComponent")))
+		if (AActor* Actor = Cast<AActor>(Outer))
 		{
-			if (AActor* Actor = Cast<AActor>(Outer))
+			if (ENSURE_OUTER_USING_REGISTERED_SUBOBJECT_LIST(Actor->IsUsingRegisteredSubObjectList(), Actor))
 			{
-				if (ensureAlwaysMsgf(Actor->IsUsingRegisteredSubObjectList(), TEXT("Outer is not using bReplicateUsingRegisteredSubObjectList. MAKE SURE bReplicateUsingRegisteredSubObjectList UNDER Replication IS ENABLED FOR THIS OUTER")))
-				{
-					Actor->AddReplicatedSubObject(SubObject, NetCondition);
-					SubObject->SetOwner(Actor);
-				}
+				Actor->AddReplicatedSubObject(SubObject, NetCondition);
+				SubObject->SetOwner(Actor);
 			}
-			else if (UActorComponent* ActorComponent = Cast<UActorComponent>(Outer))
+		}
+		else if (UActorComponent* ActorComponent = Cast<UActorComponent>(Outer))
+		{
+			if (ENSURE_OUTER_USING_REGISTERED_SUBOBJECT_LIST(ActorComponent->IsUsingRegisteredSubObjectList(), ActorComponent))
 			{
-				if (ensureAlwaysMsgf(ActorComponent->IsUsingRegisteredSubObjectList(), TEXT("Outer is not using bReplicateUsingRegisteredSubObjectList. MAKE SURE bReplicateUsingRegisteredSubObjectList UNDER Replication IS ENABLED FOR THIS OUTER")))
-				{
-					ActorComponent->AddReplicatedSubObject(SubObject, NetCondition);
-					SubObject->SetOwner(ActorComponent->GetOwner());
-				}
+				ActorComponent->AddReplicatedSubObject(SubObject, NetCondition);
+				SubObject->SetOwner(ActorComponent->GetOwner());
 			}
 		}
 	}
@@ -51,19 +58,16 @@ void USKGInventoryFunctionsLibrary::AddReplicatedSubObject(UObject* Outer, USKGR
 
 void USKGInventoryFunctionsLibrary::RemoveReplicatedSubObject(UObject* Outer, USKGReplicatedObject* SubObject)
 {
-	if (IsValid(Outer) && IsValid(SubObject))
+	if (ENSURE_OUTER_TYPE_ACTOR_OR_COMPONENT(Outer) && IsValid(SubObject))
 	{
-		if (ensureMsgf(IsActorOrActorComponent(Outer), TEXT("Outer is not a Actor or ActorComponent")))
+		if (AActor* Actor = Cast<AActor>(Outer))
 		{
-			if (AActor* Actor = Cast<AActor>(Outer))
-			{
-				Actor->RemoveReplicatedSubObject(SubObject);
-			}
-			else if (UActorComponent* ActorComponent = Cast<UActorComponent>(Outer))
-			{
-				ActorComponent->RemoveReplicatedSubObject(SubObject);
-			}
-			SubObject->SetOwner(nullptr);
+			Actor->RemoveReplicatedSubObject(SubObject);
 		}
+		else if (UActorComponent* ActorComponent = Cast<UActorComponent>(Outer))
+		{
+			ActorComponent->RemoveReplicatedSubObject(SubObject);
+		}
+		SubObject->SetOwner(nullptr);
 	}
 }

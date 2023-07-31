@@ -15,8 +15,7 @@ UCLASS()
 class SKGUOBJECTS_API USKGInventoryFunctionsLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-protected:
-	static bool IsActorOrActorComponent(UObject* Object) { return Object->IsA(AActor::StaticClass()) || Object->IsA(UActorComponent::StaticClass()); }
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "SKGInventoryStatics | Object", meta = (DeterminesOutputType = "SubObjectClass"))
 	static USKGReplicatedObject* CreateReplicatedSubObject(UObject* Outer, TSubclassOf<USKGReplicatedObject> SubObjectClass);
